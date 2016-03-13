@@ -58,6 +58,12 @@ class TunesCrawler(object):
     def get_search_string(self, query):
         return '/search?q=' + '+'.join(query.split())
 
+    def search(self, name):
+        search_url = self.get_search_string(name)
+        tree = self.get_tree(search_url)
+        for anchor in tree.select('div h4 a'):
+            yield anchor
+
     def search_for_album(self, album):
         LOG.info('Searching for album %s', album)
         search_url = self.get_search_string(album)
@@ -191,6 +197,10 @@ class TunesCrawler(object):
             raise ValueError("Invalid uri '%s'")
         pprint(download_url)
 
+    def find(self, name):
+        for anchor in self.search(name):
+            print "%-40s %s" % (anchor.text, anchor['href'])
+
 
 def get_args():
     parser = argparse.ArgumentParser(description='Scrapes 9xtunes for album link')
@@ -208,6 +218,10 @@ def get_args():
                         required=False,
                         action='store',
                         help='URI for the song/album')
+    parser.add_argument('-f', '--find',
+                        required=False,
+                        action='store',
+                        help='Find album/song')
     parser.add_argument('-i', '--individual',
                         required=False,
                         action='store_true',
@@ -240,5 +254,7 @@ if __name__ == '__main__':
         c.get_single(args.single)
     elif args.uri:
         c.get_from_uri(args.uri)
+    elif args.find:
+        c.find(args.find)
     else:
         c.get_latest(args.individual)
