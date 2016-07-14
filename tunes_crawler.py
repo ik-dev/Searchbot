@@ -114,7 +114,8 @@ class TunesCrawler(object):
         urllib2.install_opener(opener)
         url_obj = urllib2.urlopen(url)
         filename = os.path.basename(url_obj.geturl())
-        
+        print 'File to download: %s' % filename
+
     def get_download_link(self, link, box):
         divs = box.findAll('div', {'class': 'left-col'})
         anchors = [div.find('a')['href'] for div in divs]
@@ -142,7 +143,7 @@ class TunesCrawler(object):
         LOG.info('Searching single link for full album')
         zip_link = tree.find('div', {'class': 'album-zip-link'})
         if not zip_link:
-            raise FailedToFindDownladLink(url=album_url)
+            raise FailedToFindDownloadLink(link=album_url)
         zip_link = zip_link.find('a')['href']
         if zip_link and zip_link.startswith('/zip'):
             return self.get_album_zip_link(zip_link)
