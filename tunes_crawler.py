@@ -15,6 +15,7 @@ LOG.setLevel(logging.INFO)
 
 class FailedToFind(Exception):
     message = 'Failed to find.'
+
     def __init__(self, **kwargs):
         message = self.message % kwargs
         super(FailedToFind, self).__init__(message)
@@ -204,7 +205,8 @@ class TunesCrawler(object):
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Scrapes 9xtunes for album link')
+    parser = argparse.ArgumentParser(
+        description='Scrapes 9xtunes for album link')
     parser.add_argument('-a', '--album',
                         required=False,
                         action='store',
